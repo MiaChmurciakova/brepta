@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#EDF1F3">
+<!-- ARTIFACT:HEAD-START -->
+<title>Brepta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+:root{
+  --ground:#EDF1F3; --surface:#FFFFFF; --surface-2:#F5F8F9;
+  --ink:#12222A; --ink-2:#47606B; --muted:#5F757F; --line:#DAE3E7;
+  --accent:#C4460A; --accent-ink:#FFFFFF; --accent-soft:#FFF1E9;
+  --teal:#0C6F79; --teal-soft:#DCEFF1;
+  --good:#226B3D; --good-soft:#DCEFE2;
+  --shadow:0 1px 0 rgba(18,34,42,.06), 0 12px 28px -16px rgba(18,34,42,.45);
+  --r:16px; --r-lg:22px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D181E; --surface:#16252D; --surface-2:#1C313A;
+    --ink:#E9F1F4; --ink-2:#AEC5CE; --muted:#7F99A3; --line:#254049;
+    --accent:#FF7A3D; --accent-ink:#221008; --accent-soft:#3A2317;
+    --teal:#46B8C2; --teal-soft:#0F3038;
+    --good:#5FC383; --good-soft:#12301E;
+    --shadow:0 1px 0 rgba(0,0,0,.3), 0 14px 30px -18px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D181E; --surface:#16252D; --surface-2:#1C313A;
+  --ink:#E9F1F4; --ink-2:#AEC5CE; --muted:#7F99A3; --line:#254049;
+  --accent:#FF7A3D; --accent-ink:#221008; --accent-soft:#3A2317;
+  --teal:#46B8C2; --teal-soft:#0F3038;
+  --good:#5FC383; --good-soft:#12301E;
+  --shadow:0 1px 0 rgba(0,0,0,.3), 0 14px 30px -18px rgba(0,0,0,.9);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:"Nunito","Segoe UI",system-ui,-apple-system,sans-serif;
+  font-size:17px; line-height:1.5; -webkit-text-size-adjust:100%;
+}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+:focus-visible{outline:3px solid var(--teal);outline-offset:2px;border-radius:6px}
+h1,h2,h3{font-family:"Fredoka","Nunito",system-ui,sans-serif;font-weight:600;margin:0;text-wrap:balance;letter-spacing:-.01em}
+
+.shell{max-width:540px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;
+  padding:0 16px calc(84px + env(safe-area-inset-bottom));}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:calc(14px + env(safe-area-inset-top)) 2px 10px;}
+.brand{display:flex;align-items:center;gap:9px;font-family:"Fredoka",sans-serif;font-weight:700;font-size:21px}
+.brand .mark{width:32px;height:32px;border-radius:10px;background:var(--accent);color:var(--accent-ink);
+  display:grid;place-items:center;font-size:18px;transform:rotate(-4deg)}
+.streak{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);
+  border-radius:999px;padding:5px 12px;font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:18px;box-shadow:var(--shadow)}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+.today{display:flex;flex-direction:column;gap:14px;margin-bottom:18px}
+.today .lvl{font-family:"Fredoka",sans-serif;font-size:26px;font-weight:600;line-height:1.15}
+.today p{margin:0;color:var(--ink-2);font-size:15.5px}
+.cta{background:var(--accent);color:var(--accent-ink);border-radius:var(--r);
+  padding:16px;font-family:"Fredoka",sans-serif;font-size:21px;font-weight:600;width:100%;
+  display:flex;align-items:center;justify-content:center;gap:10px;transition:transform .12s ease}
+.cta:active{transform:translateY(2px)}
+.cta.ghost{background:var(--surface-2);color:var(--ink);border:1px solid var(--line)}
+
+.sec-title{display:flex;align-items:baseline;justify-content:space-between;margin:22px 2px 10px}
+.levels{display:flex;flex-direction:column;gap:9px;list-style:none;padding:0;margin:0}
+.level{display:flex;align-items:center;gap:13px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r);padding:12px 14px;text-align:left;width:100%}
+.level .ic{width:40px;height:40px;flex:0 0 40px;border-radius:12px;background:var(--surface-2);
+  display:grid;place-items:center;font-size:21px}
+.level .nm{font-weight:700;font-size:16px;line-height:1.25}
+.level .sub{font-size:13.5px;color:var(--muted)}
+.level.now{border-color:var(--accent);background:var(--accent-soft)}
+.level.now .ic{background:var(--accent);color:var(--accent-ink)}
+.level.done .ic{background:var(--good-soft);color:var(--good)}
+.level.locked{opacity:.55}
+.level .rightnote{margin-left:auto;font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap}
+
+.nav{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);
+  padding:8px 0 calc(8px + env(safe-area-inset-bottom));display:flex;justify-content:center;gap:6px;z-index:20}
+.nav button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 20px;border-radius:14px;
+  font-size:12px;font-weight:700;color:var(--muted)}
+.nav button .ic{font-size:21px;line-height:1}
+.nav button[aria-current="page"]{color:var(--accent);background:var(--accent-soft)}
+
+.practice{position:fixed;inset:0;background:var(--ground);z-index:40;display:flex;flex-direction:column;
+  padding:calc(12px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom))}
+.p-top{display:flex;align-items:center;gap:12px;max-width:540px;width:100%;margin:0 auto}
+.dots{display:flex;gap:5px;flex:1;flex-wrap:wrap}
+.dot{height:6px;flex:1 1 10px;border-radius:99px;background:var(--line)}
+.dot.on{background:var(--accent)}
+.close{width:38px;height:38px;border-radius:12px;background:var(--surface);border:1px solid var(--line);
+  display:grid;place-items:center;font-size:19px;flex:0 0 38px}
+.close[disabled]{opacity:.3;cursor:default}
+.backline{display:flex;gap:9px;justify-content:center;margin-top:10px}
+.backline button{background:none;color:var(--muted);font-weight:700;font-size:15px;padding:8px 12px;border-radius:12px}
+.p-body{flex:1;display:flex;flex-direction:column;justify-content:center;gap:16px;
+  max-width:540px;width:100%;margin:0 auto;padding:18px 0}
+.p-card{background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:26px 20px;
+  box-shadow:var(--shadow);text-align:center;animation:pop .22s ease}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+.p-kind{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--teal)}
+.p-emoji{font-size:56px;line-height:1;margin:10px 0 4px}
+.p-word{font-family:"Fredoka",sans-serif;font-weight:600;font-size:clamp(38px,11vw,58px);line-height:1.1;
+  margin:6px 0;letter-spacing:-.02em}
+.p-word.small{font-size:clamp(25px,6.6vw,34px);line-height:1.28}
+.hl{color:var(--accent)}
+.p-how{color:var(--ink-2);font-size:16px;margin:10px auto 0;max-width:34ch}
+.p-reps{display:inline-block;margin-top:12px;background:var(--teal-soft);color:var(--teal);
+  border-radius:999px;padding:5px 14px;font-weight:800;font-size:14px}
+.tools{display:flex;gap:9px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.tool{background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:9px 16px;
+  font-weight:700;font-size:15px;display:flex;align-items:center;gap:7px}
+.tool[data-rec="on"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.rate{display:flex;flex-direction:column;gap:9px;max-width:540px;width:100%;margin:0 auto}
+.rate .row{display:flex;gap:9px}
+.rate button{flex:1;border-radius:var(--r);padding:15px 8px;font-weight:800;font-size:16px;
+  border:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;align-items:center;gap:4px}
+.rate .yes{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+.rate .again{background:var(--surface-2)}
+.rate .em{font-size:22px}
+
+.done-wrap{text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center}
+.done-stars{font-size:52px;letter-spacing:4px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.stat .n{font-family:"Fredoka",sans-serif;font-size:30px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1}
+.stat .l{font-size:13px;color:var(--muted);font-weight:700;margin-top:3px}
+.week{display:flex;gap:6px;margin-top:12px}
+.day{flex:1;aspect-ratio:1;border-radius:12px;background:var(--surface-2);border:1px solid var(--line);
+  display:grid;place-items:center;font-size:12px;font-weight:800;color:var(--muted)}
+.day.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+
+.prose p{color:var(--ink-2);font-size:15.5px;margin:9px 0}
+.prose ol{color:var(--ink-2);font-size:15.5px;padding-left:20px;margin:9px 0}
+.prose li{margin:5px 0}
+.note{background:var(--teal-soft);border-radius:var(--r);padding:14px;font-size:15px;color:var(--ink)}
+.field{display:flex;flex-direction:column;gap:7px;margin-top:14px}
+.field label{font-weight:800;font-size:14px}
+select{width:100%;padding:13px;border-radius:var(--r);border:1px solid var(--line);
+  background:var(--surface-2);color:var(--ink);font:inherit;font-weight:700}
+.danger{color:var(--accent);font-weight:800;font-size:15px;text-decoration:underline;padding:4px 0}
+.level-about{margin:2px 4px 6px;font-size:14.5px;color:var(--ink-2);line-height:1.45}
+.hidden{display:none !important}
+@media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+</style>
+<!-- ARTIFACT:HEAD-END -->
+</head>
+<body>
+<!-- ARTIFACT:BODY-START -->
+<div class="shell" id="shell">
+  <header class="top">
+    <div class="brand"><span class="mark">🏍️</span> Brepta</div>
+    <div class="streak" id="streak" title="Dny v řadě">🔥 <span id="streakN">0</span></div>
+  </header>
+  <main id="view"></main>
+</div>
+
+<nav class="nav" id="nav">
+  <button data-tab="home" aria-current="page"><span class="ic">🏁</span>Trénink</button>
+  <button data-tab="stars"><span class="ic">⭐</span>Odměny</button>
+  <button data-tab="parent"><span class="ic">👩</span>Pro rodiče</button>
+</nav>
+
+<div class="practice hidden" id="practice"></div>
+
+<script>
+/* ---------------------------------------------------------------
+   BREPTA — trénink hlásek R a Ř
+   Posloupnost pater vychází z běžného logopedického postupu:
+   přípravné cviky → klepání D/T/N/L → vyvození R ze slabik dr/tr →
+   slabiky → slova (nejdřív ve skupině, pak uprostřed, na konci,
+   na začátku až nakonec) → věty → teprve potom Ř.
+----------------------------------------------------------------*/
+
+const LEVELS = [
+  {
+    id:1, icon:"👅", name:"Rozcvička jazyka",
+    sub:"Cviky na jazyk a rty",
+    about:"Jazyk je sval. Než se rozjede motorka, musí se rozcvičit. Tohle patro se nikdy nepřeskakuje — je součástí každé lekce.",
+    kind:"cvik",
+    items:[
+      {t:"Koník klape", e:"🐴", how:"Mlaskej jazykem o patro jako koník, který klape kopýtky.", reps:"10×"},
+      {t:"Malíř", e:"🖌️", how:"Špičkou jazyka „maluj\" po patře od zubů dozadu a zpátky.", reps:"10×"},
+      {t:"Houpačka", e:"🛝", how:"Špička jazyka za horní zuby, pak za dolní. Pusa zůstává otevřená.", reps:"15×"},
+      {t:"Lízátko", e:"🍭", how:"Krouž jazykem po rtech dokola — jednou tam, jednou zpátky.", reps:"10×"},
+      {t:"Počítáme zuby", e:"🦷", how:"Jazykem přejeď po horních zubech zevnitř, jako bys je počítal.", reps:"5×"},
+      {t:"Široký a úzký", e:"↔️", how:"Vyplázni jazyk doširoka jako lopatu, pak ho zašpičati jako jehlu.", reps:"8×"},
+      {t:"Svíčka", e:"🕯️", how:"Zhluboka nadechni a dlouze foukej na prst, jako bys sfoukával svíčku.", reps:"5×"},
+      {t:"Motorka rty", e:"🏍️", how:"Vypusť vzduch mezi volnými rty: brrrrr. Rty musí vibrovat.", reps:"5×"}
+    ]
+  },
+  {
+    id:2, icon:"🥁", name:"Klepání za zuby",
+    sub:"D · T · N · L",
+    about:"Špička jazyka se učí najít místo těsně za horními zuby — přesně tam, kde bude později vibrovat R.",
+    kind:"zvuk",
+    items:[
+      {t:"d d d d d", e:"🥁", how:"Klepej špičkou jazyka za horní zuby. Rychle a lehce."},
+      {t:"t t t t t", e:"🥁", how:"To samé, ale ostřeji. Pusa zůstává pootevřená."},
+      {t:"n n n n n", e:"👃", how:"Jazyk se drží nahoře, zvuk jde nosem."},
+      {t:"l l l l l", e:"👅", how:"Jazyk nahoře, vzduch po stranách."},
+      {t:"de de de", e:"🎵", how:"Rychle za sebou, jako když kape kohoutek."},
+      {t:"te te te", e:"🎵", how:"Rychle za sebou. Zkus zrychlovat."},
+      {t:"eddddda", e:"⚡", how:"Prodluž to „d\" uprostřed co nejdéle. Tady se poprvé může ozvat vibrace."},
+      {t:"addddda", e:"⚡", how:"To samé s „a\". Pusa víc otevřená, jazyk se uvolní."}
+    ]
+  },
+  {
+    id:3, icon:"🏍️", name:"Nastartuj motorku",
+    sub:"Vyvození R z dr a tr",
+    about:"R se nikdy nevyvozuje samo o sobě. Rozjíždí se ze skupiny dr / tr, kde jazyk už je na správném místě.",
+    kind:"zvuk",
+    items:[
+      {t:"d-d-d-drrr", e:"🏍️", how:"Třikrát klepni d a pak to nech rozjet: drrrr."},
+      {t:"t-t-t-trrr", e:"🏍️", how:"Třikrát t a pak trrrr. Nesnaž se to tlačit silou."},
+      {t:"drrr", e:"💨", how:"Krátký start. Když to zavrčí, i kdyby jen na chvilku, počítá se to."},
+      {t:"trrr", e:"💨", how:"Krátký start. Vzduch musí jít pořádně ven."},
+      {t:"dr dr dr", e:"🔁", how:"Tři starty za sebou, mezi nimi nádech."},
+      {t:"tr tr tr", e:"🔁", how:"Tři starty za sebou. Ramena uvolněná."},
+      {t:"drrrá", e:"🚀", how:"Rozjeď motorku a plynule přejdi do „á\"."},
+      {t:"trrrá", e:"🚀", how:"To samé s „t\". Táhni to co nejdéle."}
+    ]
+  },
+  {
+    id:4, icon:"🔤", name:"Slabiky",
+    sub:"dra · tra · ar · ra",
+    about:"Pořadí není náhodné: nejdřív R po d/t, pak R na konci slabiky, a úplně nakonec samotné ra-re-ri, které je nejtěžší.",
+    kind:"zvuk",
+    items:[
+      {t:"dra dre dry", e:"🔤", how:"Pomalu a zřetelně, každou slabiku zvlášť."},
+      {t:"dro dru drá", e:"🔤", how:"Pomalu a zřetelně."},
+      {t:"tra tre try", e:"🔤", how:"Pomalu a zřetelně."},
+      {t:"tro tru trá", e:"🔤", how:"Pomalu a zřetelně."},
+      {t:"bra bre bro", e:"🔤", how:"Teď rty a jazyk spolupracují."},
+      {t:"pra pre pro", e:"🔤", how:"Pomalu a zřetelně."},
+      {t:"ar er ir", e:"🔚", how:"R je na konci slabiky — drž ho chvilku."},
+      {t:"or ur ár", e:"🔚", how:"R je na konci slabiky."},
+      {t:"ra re ry", e:"⭐", how:"Nejtěžší kousek. Když to nejde, vrať se o krok zpátky na „dra\"."},
+      {t:"ro ru rá", e:"⭐", how:"Nejtěžší kousek. Klidně to rozjeď zase přes „d\"."}
+    ]
+  },
+  {
+    id:5, icon:"🐉", name:"Slova se skupinou",
+    sub:"drak · tráva · bratr",
+    about:"První opravdová slova. R je schované mezi souhláskami, kde se vyslovuje nejsnadněji.",
+    kind:"slovo", speak:true,
+    items:[
+      {t:"drak", e:"🐉"}, {t:"drát", e:"🧵"}, {t:"dres", e:"👕"}, {t:"dráha", e:"🛤️"},
+      {t:"traktor", e:"🚜"}, {t:"tráva", e:"🌿"}, {t:"trubka", e:"🎺"}, {t:"tramvaj", e:"🚋"},
+      {t:"brambora", e:"🥔"}, {t:"brýle", e:"👓"}, {t:"brána", e:"🚪"}, {t:"bruslit", e:"⛸️"},
+      {t:"prase", e:"🐷"}, {t:"prsten", e:"💍"}, {t:"pravítko", e:"📏"}, {t:"prádlo", e:"🧺"},
+      {t:"kráva", e:"🐄"}, {t:"kruh", e:"⭕"}, {t:"krokodýl", e:"🐊"}, {t:"krabice", e:"📦"},
+      {t:"vrána", e:"🐦‍⬛"}, {t:"vrtulník", e:"🚁"}, {t:"vrba", e:"🌳"},
+      {t:"hrad", e:"🏰"}, {t:"hrnek", e:"☕"}, {t:"hruška", e:"🍐"}, {t:"hrách", e:"🫛"},
+      {t:"strom", e:"🌲"}, {t:"struna", e:"🎸"}, {t:"strýc", e:"👨"}
+    ]
+  },
+  {
+    id:6, icon:"👑", name:"R uprostřed slova",
+    sub:"koruna · mrkev · jaro",
+    about:"R stojí samo mezi samohláskami. O stupínek těžší než ve skupině.",
+    kind:"slovo", speak:true,
+    items:[
+      {t:"koruna", e:"👑"}, {t:"mrkev", e:"🥕"}, {t:"jaro", e:"🌷"}, {t:"hora", e:"⛰️"},
+      {t:"pero", e:"🖊️"}, {t:"sirup", e:"🍯"}, {t:"baterka", e:"🔦"}, {t:"veverka", e:"🐿️"},
+      {t:"motorka", e:"🏍️"}, {t:"kamarád", e:"🧒"}, {t:"mravenec", e:"🐜"}, {t:"parník", e:"🚢"},
+      {t:"barva", e:"🎨"}, {t:"zahrada", e:"🌻"}, {t:"kytara", e:"🎸"}, {t:"pyramida", e:"🔺"}
+    ]
+  },
+  {
+    id:7, icon:"🚜", name:"R na konci slova",
+    sub:"bratr · kufr · vítr",
+    about:"Na konci slova musí R vydržet až do konce výdechu.",
+    kind:"slovo", speak:true,
+    items:[
+      {t:"bratr", e:"👦"}, {t:"kufr", e:"🧳"}, {t:"vítr", e:"🌬️"}, {t:"litr", e:"🥛"},
+      {t:"metr", e:"📐"}, {t:"cukr", e:"🍬"}, {t:"svetr", e:"🧥"}, {t:"tygr", e:"🐯"},
+      {t:"papír", e:"📄"}, {t:"doktor", e:"🩺"}, {t:"semafor", e:"🚦"}, {t:"traktor", e:"🚜"},
+      {t:"talíř", e:"🍽️", note:"Pozor, tady je Ř"}, {t:"mistr", e:"🏆"}
+    ]
+  },
+  {
+    id:8, icon:"🐟", name:"R na začátku slova",
+    sub:"ruka · ryba · růže",
+    about:"Nejtěžší pozice ze všech — R se musí rozjet bez rozběhu. Nechte si ji opravdu až nakonec.",
+    kind:"slovo", speak:true,
+    items:[
+      {t:"ruka", e:"✋"}, {t:"ryba", e:"🐟"}, {t:"rak", e:"🦞"}, {t:"růže", e:"🌹"},
+      {t:"rohlík", e:"🥐"}, {t:"robot", e:"🤖"}, {t:"rukavice", e:"🧤"}, {t:"ráno", e:"🌅"},
+      {t:"radost", e:"😀"}, {t:"rys", e:"🐈"}, {t:"rám", e:"🖼️"}, {t:"raketa", e:"🚀"}
+    ]
+  },
+  {
+    id:9, icon:"📖", name:"Věty a jazykolamy",
+    sub:"Celé věty s R",
+    about:"Teď už jde o to, aby R vydrželo i v běžné řeči, ne jen v jednom slově.",
+    kind:"veta", speak:true,
+    items:[
+      {t:"Drak drží drát.", e:"🐉"},
+      {t:"Traktor táhne trakař.", e:"🚜"},
+      {t:"Kráva stojí na trávě.", e:"🐄"},
+      {t:"Bratr má nový svetr.", e:"🧥"},
+      {t:"Na hradě bydlí drak.", e:"🏰"},
+      {t:"Veverka nese oříšek.", e:"🐿️"},
+      {t:"Prase se válí v bahně.", e:"🐷"},
+      {t:"Krokodýl má velké zuby.", e:"🐊"},
+      {t:"Strč prst skrz krk.", e:"😜", note:"Klasický jazykolam"},
+      {t:"Tygr trhá trávu.", e:"🐯"},
+      {t:"Ráno vstávám brzy.", e:"⏰"},
+      {t:"Robot rozbil raketu.", e:"🤖"}
+    ]
+  },
+  {
+    id:10, icon:"🍒", name:"Hláska Ř",
+    sub:"tři · řeka · talíř",
+    about:"Ř se staví až na hotovém R — vyvozuje se ze skupiny tř / dř, ne samostatně.",
+    kind:"slovo", speak:true,
+    items:[
+      {t:"tři", e:"3️⃣", how:"Odrazový můstek pro celé Ř."},
+      {t:"třešně", e:"🍒"}, {t:"třída", e:"🏫"}, {t:"dřevo", e:"🪵"}, {t:"křída", e:"🖍️"},
+      {t:"přítel", e:"🤝"}, {t:"střecha", e:"🏠"},
+      {t:"moře", e:"🌊"}, {t:"dveře", e:"🚪"}, {t:"večeře", e:"🍲"}, {t:"koření", e:"🌿"},
+      {t:"talíř", e:"🍽️"}, {t:"keř", e:"🌳"}, {t:"kuchař", e:"👨‍🍳"}, {t:"lékař", e:"🩺"},
+      {t:"kalendář", e:"📅"},
+      {t:"řeka", e:"🏞️"}, {t:"řízek", e:"🍖"}, {t:"řepa", e:"🥬"}, {t:"řetěz", e:"⛓️"},
+      {t:"Tři třešně na talíři.", e:"🍒", kind:"veta"},
+      {t:"V moři plave rejnok.", e:"🌊", kind:"veta"}
+    ]
+  }
+];
+</script>
+
+<script>
+/* ----------------------------- stav ----------------------------- */
+const KEY = "brepta.v1";
+const OLD_KEY = "motorka.v1";   // appka se drive jmenovala Motorka
+const DEFAULT_STATE = { level:1, stars:0, days:[], offset:{}, doneCount:{} };
+let S = load();
+
+function load(){
+  try{
+    let raw = localStorage.getItem(KEY);
+    if(!raw){
+      // prenos postupu z doby, kdy se appka jmenovala Motorka
+      const old = localStorage.getItem(OLD_KEY);
+      if(old){ localStorage.setItem(KEY, old); localStorage.removeItem(OLD_KEY); raw = old; }
+    }
+    if(raw) return Object.assign({}, DEFAULT_STATE, JSON.parse(raw));
+  }catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULT_STATE));
+}
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+}
+const today = () => new Date().toISOString().slice(0,10);
+function dayShift(n){ const d=new Date(); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
+function streak(){
+  let n=0, i = S.days.includes(today()) ? 0 : -1;
+  if(i===-1 && !S.days.includes(dayShift(-1))) return 0;
+  while(S.days.includes(dayShift(i))){ n++; i--; }
+  return n;
+}
+const level = id => LEVELS.find(l => l.id===id);
+
+/* ---------------------------- pomůcky --------------------------- */
+function esc(s){ return s.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
+function hl(text){
+  return esc(text).replace(/[rřRŘ]/g, m => '<span class="hl">'+m+'</span>');
+}
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+/* ---------------------------- namluvení -------------------------- */
+let csVoice = null;
+function findVoice(){
+  if(!("speechSynthesis" in window)) return;
+  const vs = speechSynthesis.getVoices() || [];
+  csVoice = vs.find(v => /^cs/i.test(v.lang)) || null;
+  document.querySelectorAll("[data-speak]").forEach(b => b.classList.toggle("hidden", !csVoice));
+}
+if("speechSynthesis" in window){
+  findVoice();
+  speechSynthesis.onvoiceschanged = findVoice;
+}
+function speak(text){
+  if(!csVoice) return;
+  try{
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.voice = csVoice; u.lang = csVoice.lang; u.rate = 0.75;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+/* ---------------------------- nahrávání -------------------------- */
+let rec = null, recChunks = [], recUrl = null, micBlocked = false;
+async function toggleRec(btn){
+  if(rec && rec.state === "recording"){ rec.stop(); return; }
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    recChunks = [];
+    rec = new MediaRecorder(stream);
+    rec.ondataavailable = e => recChunks.push(e.data);
+    rec.onstop = () => {
+      stream.getTracks().forEach(t => t.stop());
+      if(recUrl) URL.revokeObjectURL(recUrl);
+      recUrl = URL.createObjectURL(new Blob(recChunks, {type: rec.mimeType || "audio/webm"}));
+      btn.removeAttribute("data-rec");
+      btn.innerHTML = "🎤 Nahrát znovu";
+      const play = document.getElementById("playBtn");
+      if(play) play.classList.remove("hidden");
+    };
+    rec.start();
+    btn.setAttribute("data-rec","on");
+    btn.innerHTML = "⏹ Zastavit";
+  }catch(e){
+    micBlocked = true;
+    btn.classList.add("hidden");
+  }
+}
+function playRec(){
+  if(!recUrl) return;
+  new Audio(recUrl).play().catch(()=>{});
+}
+function clearRec(){
+  if(recUrl){ URL.revokeObjectURL(recUrl); recUrl = null; }
+  const p = document.getElementById("playBtn"); if(p) p.classList.add("hidden");
+}
+
+/* ---------------------------- obrazovky -------------------------- */
+let tab = "home";
+const view = document.getElementById("view");
+
+function render(){
+  document.getElementById("streakN").textContent = streak();
+  document.querySelectorAll("#nav button").forEach(b =>
+    b.dataset.tab === tab ? b.setAttribute("aria-current","page") : b.removeAttribute("aria-current"));
+  view.innerHTML = tab === "home" ? viewHome() : tab === "stars" ? viewStars() : viewParent();
+  findVoice();
+}
+
+function viewHome(){
+  const L = level(S.level);
+  const doneToday = S.days.includes(today());
+  return `
+  <section class="card today">
+    <div>
+      <div class="eyebrow">Dnešní lekce · asi 5 minut</div>
+      <div class="lvl">${L.icon} ${esc(L.name)}</div>
+    </div>
+    <p>${doneToday
+      ? "Dneska už máte hotovo. Další kolo si dát můžete, ale nemusí být."
+      : (S.level===1
+          ? "Šest cviků na jazyk a rty. Vy předvádíte, on opakuje."
+          : "Krátká rozcvička jazyka a pak " + esc(L.sub) + ".")}</p>
+    <button class="cta ${doneToday ? "ghost" : ""}" id="startBtn">${doneToday ? "🔁 Ještě jednou" : "🏁 Začít lekci"}</button>
+  </section>
+
+  <div class="sec-title"><h2>Patra</h2><span class="eyebrow">${S.level} z ${LEVELS.length}</span></div>
+  <ul class="levels">
+    ${LEVELS.map(l => {
+      const cls = l.id < S.level ? "done" : l.id === S.level ? "now" : l.id > S.level ? "locked" : "";
+      const note = l.id < S.level ? "hotovo" : l.id === S.level ? "tady jste" : "zamčeno";
+      return `<li><button class="level ${cls}" data-level="${l.id}">
+        <span class="ic">${l.icon}</span>
+        <span><span class="nm">${esc(l.name)}</span><br><span class="sub">${esc(l.sub)}</span></span>
+        <span class="rightnote">${note}</span>
+      </button>
+      <p class="level-about hidden">${esc(l.about)}${l.id > S.level ? " Odemknete v sekci Pro rodiče." : ""}</p></li>`;
+    }).join("")}
+  </ul>
+  <p class="prose" style="margin-top:14px;font-size:14px;color:var(--muted)">Patro přepíná rodič v sekci Pro rodiče — nejlíp podle toho, co řekne logoped.</p>`;
+}
+
+function viewStars(){
+  const days = [...Array(7)].map((_,i) => dayShift(i-6));
+  const names = ["Ne","Po","Út","St","Čt","Pá","So"];
+  return `
+  <div class="sec-title"><h2>Odměny</h2></div>
+  <div class="stat-grid">
+    <div class="stat"><div class="n">${S.stars}</div><div class="l">hvězdiček</div></div>
+    <div class="stat"><div class="n">${streak()}</div><div class="l">dní v řadě</div></div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="eyebrow">Poslední týden</div>
+    <div class="week">
+      ${days.map(d => `<div class="day ${S.days.includes(d) ? "on" : ""}">${names[new Date(d).getDay()]}</div>`).join("")}
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="eyebrow">Zvládnutá patra</div>
+    <ul class="levels" style="margin-top:10px">
+      ${LEVELS.filter(l => l.id <= S.level).map(l => `
+        <li><button class="level ${l.id < S.level ? "done" : "now"}" data-level="${l.id}">
+          <span class="ic">${l.icon}</span>
+          <span><span class="nm">${esc(l.name)}</span><br><span class="sub">${S.doneCount[l.id]||0} splněných kartiček</span></span>
+        </button></li>`).join("")}
+    </ul>
+  </div>`;
+}
+
+function viewParent(){
+  return `
+  <div class="sec-title"><h2>Pro rodiče</h2></div>
+  <div class="card prose">
+    <div class="eyebrow">Jak s tím pracovat</div>
+    <ol>
+      <li>Krátce a často. Pět minut denně udělá víc než půl hodiny jednou za týden.</li>
+      <li>Vy předříkáváte, dítě opakuje. Ať vidí na vaši pusu.</li>
+      <li>Nikdy neopravujte slovem „špatně“. Stačí to znovu předvést a jet dál.</li>
+      <li>Do dalšího patra se jde, až předchozí jde snadno — ne když se zadaří jednou.</li>
+      <li>Když se R nedaří rozjet, vraťte se o patro níž. Není to krok zpátky.</li>
+    </ol>
+    <div class="note">Appka nenahrazuje logopeda. Slouží na domácí procvičování mezi návštěvami — a patro nastavujte podle toho, kde vás logoped zrovna má.</div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="eyebrow">Nastavení</div>
+    <div class="field">
+      <label for="lvlSel">Aktuální patro</label>
+      <select id="lvlSel">
+        ${LEVELS.map(l => `<option value="${l.id}" ${l.id===S.level?"selected":""}>${l.id}. ${esc(l.name)} — ${esc(l.sub)}</option>`).join("")}
+      </select>
+      <p style="font-size:14px;color:var(--muted);margin:4px 0 0">${esc(level(S.level).about)}</p>
+    </div>
+    <div class="field">
+      <label>Předčítání</label>
+      <p style="font-size:14px;color:var(--muted);margin:0">${csVoice
+        ? "Český hlas je v telefonu k dispozici — u slov a vět svítí tlačítko Poslech. U slabik schválně není, ty říkejte vy."
+        : "V tomhle prohlížeči není český hlas, takže tlačítko Poslech je skryté. Předříkávejte sami — je to stejně lepší."}</p>
+    </div>
+    <div class="field">
+      <label>Začít znovu</label>
+      <button class="danger" id="resetBtn">Vymazat postup a hvězdičky</button>
+    </div>
+  </div>`;
+}
+
+/* ---------------------------- lekce ----------------------------- */
+let session = null;
+const P = document.getElementById("practice");
+
+function buildSession(){
+  const L = level(S.level);
+  const warm = shuffle(LEVELS[0].items).slice(0,3).map(i => ({...i, kind:"cvik", warm:true}));
+  const off = S.offset[L.id] || 0;
+  const pool = L.items;
+  const take = Math.min(6, pool.length);
+  const main = [];
+  for(let k=0;k<take;k++) main.push({...pool[(off+k) % pool.length], kind: pool[(off+k)%pool.length].kind || L.kind, speak: !!L.speak});
+  S.offset[L.id] = (off + take) % pool.length;
+  return S.level === 1
+    ? shuffle(LEVELS[0].items).slice(0,6).map(i => ({...i, kind:"cvik"}))
+    : warm.concat(main);
+}
+
+function startSession(){
+  session = { items: buildSession(), i: 0, stars: 0, ratings: [], addedDay: false, committed: false };
+  P.classList.remove("hidden");
+  document.getElementById("nav").classList.add("hidden");
+  drawCard();
+}
+function endSession(){
+  // Predcasne ukonceni: co uz dite stihlo, se mu pocita.
+  if(session && !session.committed && session.i > 0) commit();
+  P.classList.add("hidden");
+  document.getElementById("nav").classList.remove("hidden");
+  clearRec();
+  session = null;
+  render();
+}
+
+const KINDNAME = { cvik:"Rozcvička", zvuk:"Zvuk", slovo:"Slovo", veta:"Věta" };
+
+function drawCard(){
+  clearRec();
+  const it = session.items[session.i];
+  const total = session.items.length;
+  const isText = it.kind === "slovo" || it.kind === "veta";
+  const long = it.t.length > 12;
+  P.innerHTML = `
+    <div class="p-top">
+      <button class="close" id="backBtn" aria-label="Předchozí kartička"${session.i===0 ? " disabled" : ""}>←</button>
+      <div class="dots">${[...Array(total)].map((_,k)=>`<span class="dot ${k<=session.i?"on":""}"></span>`).join("")}</div>
+      <button class="close" id="closeBtn" aria-label="Ukončit lekci">✕</button>
+    </div>
+    <div class="p-body">
+      <div class="p-card">
+        <div class="p-kind">${KINDNAME[it.kind] || "Cvičení"}${it.warm ? " · zahřátí" : ""}</div>
+        <div class="p-emoji">${it.e || "🔤"}</div>
+        <div class="p-word ${long ? "small" : ""}">${isText ? hl(it.t) : esc(it.t)}</div>
+        ${it.how ? `<p class="p-how">${esc(it.how)}</p>` : ""}
+        ${it.note ? `<p class="p-how" style="color:var(--teal);font-weight:700">${esc(it.note)}</p>` : ""}
+        ${it.reps ? `<div class="p-reps">${esc(it.reps)}</div>` : ""}
+        <div class="tools">
+          ${(it.speak && isText) ? `<button class="tool ${csVoice?"":"hidden"}" data-speak id="speakBtn">🔊 Poslech</button>` : ""}
+          ${micBlocked ? "" : `<button class="tool" id="recBtn">🎤 Nahrát</button>`}
+          <button class="tool hidden" id="playBtn">▶️ Přehrát</button>
+        </div>
+      </div>
+    </div>
+    <div class="rate">
+      <button class="yes" data-rate="2"><span class="em">🌟</span>Povedlo se</button>
+      <div class="row">
+        <button data-rate="1"><span class="em">🙂</span>Skoro</button>
+        <button class="again" data-rate="0"><span class="em">🔁</span>Ještě zkusíme</button>
+      </div>
+    </div>`;
+}
+
+function rate(val){
+  const it = session.items[session.i];
+  session.ratings[session.i] = val;
+  if(val === 2) session.stars++;
+  if(val === 0 && !it.retried) session.items.push({...it, retried:true});
+  session.i++;
+  if(session.i >= session.items.length) finishSession();
+  else drawCard();
+}
+
+/* Krok zpátky: vrátí kartičku i to, co se za ni připsalo. */
+function back(){
+  if(!session) return;
+  if(session.committed) uncommit();
+  if(session.i === 0) return;
+  session.i--;
+  const val = session.ratings[session.i];
+  if(val === 2) session.stars = Math.max(0, session.stars - 1);
+  if(val === 0){
+    const last = session.items[session.items.length - 1];
+    if(last && last.retried && session.items.length - 1 > session.i) session.items.pop();
+  }
+  session.ratings[session.i] = undefined;
+  drawCard();
+}
+
+function commit(){
+  S.stars += session.stars;
+  S.doneCount[S.level] = (S.doneCount[S.level]||0) + session.stars;
+  const t = today();
+  if(!S.days.includes(t)){ S.days.push(t); session.addedDay = true; }
+  if(S.days.length > 400) S.days = S.days.slice(-400);
+  session.committed = true;
+  save();
+}
+function uncommit(){
+  S.stars = Math.max(0, S.stars - session.stars);
+  S.doneCount[S.level] = Math.max(0, (S.doneCount[S.level]||0) - session.stars);
+  if(session.addedDay){
+    S.days = S.days.filter(d => d !== today());
+    session.addedDay = false;
+  }
+  session.committed = false;
+  save();
+}
+
+function finishSession(){
+  commit();
+  const s = Math.max(1, Math.min(3, Math.round(session.stars / Math.max(1, session.items.length) * 3)));
+  P.innerHTML = `
+    <div class="p-body">
+      <div class="p-card done-wrap">
+        <div class="done-stars">${"⭐".repeat(s)}${"☆".repeat(3-s)}</div>
+        <h2 style="font-size:28px">Hotovo!</h2>
+        <p class="p-how">Dneska se povedlo <strong>${session.stars}</strong> z ${session.items.length} kartiček. Zítra zase kousek.</p>
+        <div class="stat-grid" style="width:100%">
+          <div class="stat"><div class="n">${S.stars}</div><div class="l">hvězdiček celkem</div></div>
+          <div class="stat"><div class="n">${streak()}</div><div class="l">dní v řadě</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="rate">
+      <button class="yes" id="doneBtn">Zpátky na trénink</button>
+      <div class="backline"><button id="backBtn">← Vrátit poslední kartičku</button></div>
+    </div>`;
+}
+
+/* ---------------------------- události --------------------------- */
+document.getElementById("nav").addEventListener("click", e => {
+  const b = e.target.closest("button[data-tab]");
+  if(!b) return;
+  tab = b.dataset.tab; render();
+});
+
+view.addEventListener("click", e => {
+  if(e.target.closest("#startBtn")) return startSession();
+  if(e.target.closest("#resetBtn")){
+    S = JSON.parse(JSON.stringify(DEFAULT_STATE)); save(); render(); return;
+  }
+  const lvl = e.target.closest("[data-level]");
+  if(lvl){
+    const box = lvl.parentElement.querySelector(".level-about");
+    if(box) box.classList.toggle("hidden");
+  }
+});
+view.addEventListener("change", e => {
+  if(e.target.id === "lvlSel"){ S.level = +e.target.value; save(); render(); }
+});
+
+P.addEventListener("click", e => {
+  if(e.target.closest("#backBtn")) return back();
+  if(e.target.closest("#closeBtn")) return endSession();
+  if(e.target.closest("#doneBtn")) return endSession();
+  if(e.target.closest("#speakBtn")) return speak(session.items[session.i].t);
+  if(e.target.closest("#recBtn")) return toggleRec(e.target.closest("#recBtn"));
+  if(e.target.closest("#playBtn")) return playRec();
+  const r = e.target.closest("[data-rate]");
+  if(r) rate(+r.dataset.rate);
+});
+
+render();
+</script>
+<!-- ARTIFACT:BODY-END -->
+</body>
+</html>
