@@ -1,4 +1,5 @@
 .DS_Store
 
-# generovany soubor, vyrabi ho build.py
-artifact.html
+# generovane soubory, vyrabi je build.py
+brepta.html
+dist/
