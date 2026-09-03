@@ -361,7 +361,7 @@ const LEVELS = [
 
 <script>
 /* ----------------------------- stav ----------------------------- */
-const VERZE = "15 · 3. 9. 2026";
+const VERZE = "16 · 3. 9. 2026";
 const KEY = "brepta.v1";
 const OLD_KEY = "motorka.v1";   // appka se drive jmenovala Motorka
 const DEFAULT_STATE = { level:1, stars:0, days:[], offset:{}, doneCount:{}, doneOn:{} };
@@ -483,7 +483,7 @@ function viewStars(){
   <div class="sec-title"><h2>Odměny</h2></div>
   <div class="stat-grid">
     <div class="stat"><div class="n">${S.stars}</div><div class="l">hvězdiček</div></div>
-    <div class="stat"><div class="n">${streak()}</div><div class="l">dní v řadě</div></div>
+    <div class="stat"><div class="n">${streak()}</div><div class="l">${streak() === 1 ? "den" : (streak() >= 2 && streak() <= 4 ? "dny" : "dní")} v řadě</div></div>
   </div>
   <div class="card" style="margin-top:14px">
     <div class="eyebrow">Poslední týden</div>
@@ -679,11 +679,11 @@ function finishSession(){
       <div class="p-card done-wrap">
         <div class="done-stars">${"⭐".repeat(s)}${"☆".repeat(3-s)}</div>
         <h2 style="font-size:28px">Hotovo!</h2>
-        <p class="p-how">Dneska se povedlo <strong>${session.stars}</strong> z ${session.items.length} kartiček. Zítra zase kousek.</p>
-        <p class="p-how" style="color:var(--muted);font-size:14.5px">Až bude tahle úroveň chodit snadno — klidně za týden — přepněte se v seznamu Úrovně na další. Ťukněte na úroveň a objeví se tlačítko.</p>
+        <p class="p-how">Dneska se povedlo <strong>${session.stars} z ${session.items.length}</strong> kartiček. Zítra zase kousek.</p>
+        <p class="p-how" style="color:var(--muted);font-size:14.5px">Až tahle úroveň půjde dítěti snadno — klidně za týden — přepněte se v seznamu Úrovně na další. Ťukněte na úroveň a objeví se tlačítko.</p>
         <div class="stat-grid" style="width:100%">
           <div class="stat"><div class="n">${S.stars}</div><div class="l">hvězdiček celkem</div></div>
-          <div class="stat"><div class="n">${streak()}</div><div class="l">dní v řadě</div></div>
+          <div class="stat"><div class="n">${streak()}</div><div class="l">${streak() === 1 ? "den" : (streak() >= 2 && streak() <= 4 ? "dny" : "dní")} v řadě</div></div>
         </div>
       </div>
     </div>
