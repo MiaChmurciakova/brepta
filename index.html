@@ -361,7 +361,7 @@ const LEVELS = [
 
 <script>
 /* ----------------------------- stav ----------------------------- */
-const VERZE = "14 · 3. 9. 2026";
+const VERZE = "15 · 3. 9. 2026";
 const KEY = "brepta.v1";
 const OLD_KEY = "motorka.v1";   // appka se drive jmenovala Motorka
 const DEFAULT_STATE = { level:1, stars:0, days:[], offset:{}, doneCount:{}, doneOn:{} };
@@ -446,7 +446,7 @@ function viewHome(){
     <p>${doneToday
       ? "Dneska už máte hotovo. Další kolo si dát můžete, ale nemusí být."
       : (S.level===1
-          ? "Šest cviků na jazyk a rty. Vy předvádíte, on opakuje."
+          ? "Šest cviků na jazyk a rty. Vy předvádíte, dítě opakuje."
           : "Krátká rozcvička jazyka a pak " + esc(L.sub) + ".")}</p>
     <button class="cta ${doneToday ? "ghost" : ""}" id="startBtn">${doneToday ? "🔁 Ještě jednou" : "🏁 Začít lekci"}</button>
   </section>
