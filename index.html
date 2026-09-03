@@ -361,7 +361,7 @@ const LEVELS = [
 
 <script>
 /* ----------------------------- stav ----------------------------- */
-const VERZE = "13 · 3. 9. 2026";
+const VERZE = "14 · 3. 9. 2026";
 const KEY = "brepta.v1";
 const OLD_KEY = "motorka.v1";   // appka se drive jmenovala Motorka
 const DEFAULT_STATE = { level:1, stars:0, days:[], offset:{}, doneCount:{}, doneOn:{} };
@@ -454,12 +454,16 @@ function viewHome(){
   <div class="sec-title"><h2>Úrovně</h2><span class="eyebrow">${S.level} z ${LEVELS.length}</span></div>
   <ul class="levels">
     ${LEVELS.map(l => {
-      const cls = l.id < S.level ? "done" : l.id === S.level ? "now" : "locked";
-      const note = l.id < S.level ? "hotovo" : l.id === S.level ? "tady jste" : "později";
+      const practiced = (S.doneCount[l.id]||0) > 0;
+      let cls, note;
+      if(l.id === S.level){ cls = "now"; note = ""; }
+      else if(practiced){ cls = "done"; note = "hotovo"; }
+      else if(l.id > S.level){ cls = "locked"; note = "později"; }
+      else { cls = "locked"; note = "vynecháno"; }
       return `<li><button class="level ${cls}" data-level="${l.id}">
         <span class="ic">${l.icon}</span>
         <span><span class="nm">${esc(l.name)}</span><br><span class="sub">${esc(l.sub)}</span></span>
-        <span class="rightnote">${note} ▾</span>
+        <span class="rightnote">${note ? note + " " : ""}▾</span>
       </button>
       <div class="level-about hidden">
         <p>${esc(l.about)}</p>
@@ -490,8 +494,8 @@ function viewStars(){
   <div class="card" style="margin-top:14px">
     <div class="eyebrow">Zvládnuté úrovně</div>
     <ul class="levels" style="margin-top:10px">
-      ${LEVELS.filter(l => l.id <= S.level).map(l => `
-        <li><button class="level ${l.id < S.level ? "done" : "now"}" data-level="${l.id}">
+      ${LEVELS.filter(l => l.id === S.level || (S.doneCount[l.id]||0) > 0).map(l => `
+        <li><button class="level ${l.id === S.level ? "now" : "done"}" data-level="${l.id}">
           <span class="ic">${l.icon}</span>
           <span><span class="nm">${esc(l.name)}</span><br><span class="sub">${S.doneCount[l.id]||0} splněných kartiček</span></span>
         </button></li>`).join("")}
