@@ -33,7 +33,7 @@
     --ink:#EDEAFB; --ink-2:#C2B9E9; --muted:#8F87B9; --line:#39305D;
     --accent:#A78BFA; --accent-ink:#1E1533; --accent-soft:#332958;
     --teal:#7FA6FF; --teal-soft:#1E2C52;
-    --good:#5FC383; --good-soft:#12301E;
+    --good:#7BE3A8; --good-soft:#1F4934;
     --shadow:0 1px 0 rgba(0,0,0,.3), 0 14px 30px -18px rgba(0,0,0,.9);
   }
 }
@@ -42,7 +42,7 @@
   --ink:#EDEAFB; --ink-2:#C2B9E9; --muted:#8F87B9; --line:#39305D;
   --accent:#A78BFA; --accent-ink:#1E1533; --accent-soft:#332958;
   --teal:#7FA6FF; --teal-soft:#1E2C52;
-  --good:#5FC383; --good-soft:#12301E;
+  --good:#7BE3A8; --good-soft:#1F4934;
   --shadow:0 1px 0 rgba(0,0,0,.3), 0 14px 30px -18px rgba(0,0,0,.9);
 }
 *{box-sizing:border-box}
@@ -205,7 +205,7 @@ const LEVELS = [
   {
     id:1, icon:"👅", name:"Rozcvička jazyka",
     sub:"Cviky na jazyk a rty",
-    about:"Jazyk je sval. Než se rozjede motorka, musí se rozcvičit. Tohle patro se nikdy nepřeskakuje — je součástí každé lekce.",
+    about:"Jazyk je sval. Než se rozjede motorka, musí se rozcvičit. Tato úroveň se nikdy nepřeskakuje — je součástí každé lekce.",
     kind:"cvik",
     items:[
       {t:"Koník klape", e:"🐴", how:"Mlaskej jazykem o patro jako koník, který klape kopýtky.", reps:"10×"},
@@ -361,7 +361,7 @@ const LEVELS = [
 
 <script>
 /* ----------------------------- stav ----------------------------- */
-const VERZE = "12 · 3. 9. 2026";
+const VERZE = "13 · 3. 9. 2026";
 const KEY = "brepta.v1";
 const OLD_KEY = "motorka.v1";   // appka se drive jmenovala Motorka
 const DEFAULT_STATE = { level:1, stars:0, days:[], offset:{}, doneCount:{}, doneOn:{} };
@@ -451,7 +451,7 @@ function viewHome(){
     <button class="cta ${doneToday ? "ghost" : ""}" id="startBtn">${doneToday ? "🔁 Ještě jednou" : "🏁 Začít lekci"}</button>
   </section>
 
-  <div class="sec-title"><h2>Patra</h2><span class="eyebrow">${S.level} z ${LEVELS.length}</span></div>
+  <div class="sec-title"><h2>Úrovně</h2><span class="eyebrow">${S.level} z ${LEVELS.length}</span></div>
   <ul class="levels">
     ${LEVELS.map(l => {
       const cls = l.id < S.level ? "done" : l.id === S.level ? "now" : "locked";
@@ -465,11 +465,11 @@ function viewHome(){
         <p>${esc(l.about)}</p>
         ${l.id === S.level
           ? `<p class="mini">Tady teď trénujete.</p>`
-          : `<button class="switch" data-switch="${l.id}">${l.id > S.level ? "Přepnout na " + l.id + ". patro" : "Vrátit se na " + l.id + ". patro"}</button>`}
+          : `<button class="switch" data-switch="${l.id}">${l.id > S.level ? "Přepnout na " + l.id + ". úroveň" : "Vrátit se na " + l.id + ". úroveň"}</button>`}
       </div></li>`;
     }).join("")}
   </ul>
-  <p class="prose" style="margin-top:14px;font-size:14px;color:var(--muted)">Ťukněte na kterékoli patro — ukáže se, o co jde, a dá se na něj přepnout. Rozhoduje o tom rodič, nejlíp podle toho, co řekne logoped.</p>`;
+  <p class="prose" style="margin-top:14px;font-size:14px;color:var(--muted)">Ťukněte na kteroukoli úroveň — ukáže se, o co jde, a dá se na ni přepnout. Rozhoduje o tom rodič, nejlíp podle toho, co řekne logoped.</p>`;
 }
 
 function viewStars(){
@@ -488,7 +488,7 @@ function viewStars(){
     </div>
   </div>
   <div class="card" style="margin-top:14px">
-    <div class="eyebrow">Zvládnutá patra</div>
+    <div class="eyebrow">Zvládnuté úrovně</div>
     <ul class="levels" style="margin-top:10px">
       ${LEVELS.filter(l => l.id <= S.level).map(l => `
         <li><button class="level ${l.id < S.level ? "done" : "now"}" data-level="${l.id}">
@@ -508,16 +508,16 @@ function viewParent(){
       <li>Krátce a často. Pět minut denně udělá víc než půl hodiny jednou za týden.</li>
       <li>Vy předříkáváte, dítě opakuje. Ať vidí na vaši pusu.</li>
       <li>Nikdy neopravujte slovem „špatně“. Stačí to znovu předvést a jet dál.</li>
-      <li>Do dalšího patra se jde, až předchozí jde snadno — ne když se zadaří jednou.</li>
-      <li>Když se R nedaří rozjet, vraťte se o patro níž. Není to krok zpátky.</li>
+      <li>Do další úrovně se jde, až předchozí jde snadno — ne když se zadaří jednou.</li>
+      <li>Když se R nedaří rozjet, vraťte se o úroveň níž. Není to krok zpátky.</li>
     </ol>
-    <div class="note">Appka nenahrazuje logopeda. Slouží na domácí procvičování mezi návštěvami — a patro nastavujte podle toho, kde vás logoped zrovna má.</div>
+    <div class="note">Appka nenahrazuje logopeda. Slouží na domácí procvičování mezi návštěvami — a úroveň nastavujte podle toho, kde vás logoped zrovna má.</div>
   </div>
 
   <div class="card" style="margin-top:14px">
     <div class="eyebrow">Nastavení</div>
     <div class="field">
-      <label for="lvlSel">Aktuální patro</label>
+      <label for="lvlSel">Aktuální úroveň</label>
       <select id="lvlSel">
         ${LEVELS.map(l => `<option value="${l.id}" ${l.id===S.level?"selected":""}>${l.id}. ${esc(l.name)}</option>`).join("")}
       </select>
@@ -528,7 +528,7 @@ function viewParent(){
       ${resetState === "ask" ? `
         <div class="confirm">
           <p class="confirm-q">Opravdu vymazat postup?</p>
-          <p class="confirm-d">Přijdete o ${S.stars} ${S.stars === 1 ? "hvězdičku" : (S.stars >= 2 && S.stars <= 4 ? "hvězdičky" : "hvězdiček")}, o sérii dní i o nastavené patro — appka se vrátí na 1. patro. Vzít zpátky to nejde.</p>
+          <p class="confirm-d">Přijdete o ${S.stars} ${S.stars === 1 ? "hvězdičku" : (S.stars >= 2 && S.stars <= 4 ? "hvězdičky" : "hvězdiček")}, o sérii dní i o nastavenou úroveň — appka se vrátí na 1. úroveň. Vzít zpátky to nejde.</p>
           <div class="confirm-row">
             <button class="btn-danger" id="resetYes">Ano, vymazat</button>
             <button class="btn-quiet" id="resetNo">Zrušit</button>
@@ -676,7 +676,7 @@ function finishSession(){
         <div class="done-stars">${"⭐".repeat(s)}${"☆".repeat(3-s)}</div>
         <h2 style="font-size:28px">Hotovo!</h2>
         <p class="p-how">Dneska se povedlo <strong>${session.stars}</strong> z ${session.items.length} kartiček. Zítra zase kousek.</p>
-        <p class="p-how" style="color:var(--muted);font-size:14.5px">Až bude tohle patro chodit snadno — klidně za týden — přepněte se v seznamu Patra na další. Ťukněte na patro a objeví se tlačítko.</p>
+        <p class="p-how" style="color:var(--muted);font-size:14.5px">Až bude tahle úroveň chodit snadno — klidně za týden — přepněte se v seznamu Úrovně na další. Ťukněte na úroveň a objeví se tlačítko.</p>
         <div class="stat-grid" style="width:100%">
           <div class="stat"><div class="n">${S.stars}</div><div class="l">hvězdiček celkem</div></div>
           <div class="stat"><div class="n">${streak()}</div><div class="l">dní v řadě</div></div>
