@@ -361,7 +361,7 @@ const LEVELS = [
 
 <script>
 /* ----------------------------- stav ----------------------------- */
-const VERZE = "20 · 3. 9. 2026";
+const VERZE = "21 · 3. 9. 2026";
 const KEY = "brepta.v1";
 const OLD_KEY = "motorka.v1";   // appka se drive jmenovala Motorka
 const DEFAULT_STATE = { level:1, stars:0, days:[], offset:{}, doneCount:{}, doneOn:{} };
@@ -495,10 +495,10 @@ function viewStars(){
     <div class="eyebrow">Zvládnuté úrovně</div>
     <ul class="levels" style="margin-top:10px">
       ${LEVELS.filter(l => l.id === S.level || (S.doneCount[l.id]||0) > 0).map(l => `
-        <li><button class="level ${l.id === S.level ? "now" : "done"}" data-level="${l.id}">
+        <li><div class="level static ${l.id === S.level ? "now" : "done"}">
           <span class="ic">${l.icon}</span>
           <span><span class="nm">${esc(l.name)}</span><br><span class="sub">${S.doneCount[l.id]||0} splněných kartiček</span></span>
-        </button></li>`).join("")}
+        </div></li>`).join("")}
     </ul>
   </div>`;
 }
