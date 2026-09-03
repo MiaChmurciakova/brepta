@@ -215,7 +215,7 @@ const LEVELS = [
       {t:"Počítáme zuby", e:"🦷", how:"Jazykem přejeď po horních zubech zevnitř, jako bys je počítal.", reps:"5×"},
       {t:"Široký a úzký", e:"↔️", how:"Vyplázni jazyk doširoka jako lopatu, pak ho zašpičati jako jehlu.", reps:"8×"},
       {t:"Svíčka", e:"🕯️", how:"Zhluboka nadechni a dlouze foukej na prst, jako bys sfoukával svíčku.", reps:"5×"},
-      {t:"Motorka rty", e:"🏍️", how:"Vypusť vzduch mezi volnými rty: brrrrr. Rty musí vibrovat.", reps:"5×"}
+      {t:"Motorka", e:"🏍️", how:"Vypusť vzduch mezi volnými rty: brrrrr. Rty musí vibrovat.", reps:"5×"}
     ]
   },
   {
@@ -322,7 +322,7 @@ const LEVELS = [
   {
     id:9, icon:"📖", name:"Věty a jazykolamy",
     sub:"Celé věty s R",
-    about:"Teď už jde o to, aby R vydrželo i v běžné řeči, ne jen v jednom slově.",
+    about:"Teď už jde o to, aby R zaznělo i v běžné řeči, ne jen v jednom slově.",
     kind:"veta", speak:true,
     items:[
       {t:"Drak drží drát.", e:"🐉"},
@@ -361,7 +361,7 @@ const LEVELS = [
 
 <script>
 /* ----------------------------- stav ----------------------------- */
-const VERZE = "16 · 3. 9. 2026";
+const VERZE = "20 · 3. 9. 2026";
 const KEY = "brepta.v1";
 const OLD_KEY = "motorka.v1";   // appka se drive jmenovala Motorka
 const DEFAULT_STATE = { level:1, stars:0, days:[], offset:{}, doneCount:{}, doneOn:{} };
@@ -444,7 +444,7 @@ function viewHome(){
       <div class="lvl">${L.icon} ${esc(L.name)}</div>
     </div>
     <p>${doneToday
-      ? "Dneska už máte hotovo. Další kolo si dát můžete, ale nemusí být."
+      ? "Dneska už máte hotovo. Další kolo si dát můžete, ale nemusíte."
       : (S.level===1
           ? "Šest cviků na jazyk a rty. Vy předvádíte, dítě opakuje."
           : "Krátká rozcvička jazyka a pak " + esc(L.sub) + ".")}</p>
@@ -473,7 +473,7 @@ function viewHome(){
       </div></li>`;
     }).join("")}
   </ul>
-  <p class="prose" style="margin-top:14px;font-size:14px;color:var(--muted)">Ťukněte na kteroukoli úroveň — ukáže se, o co jde, a dá se na ni přepnout. Rozhoduje o tom rodič, nejlíp podle toho, co řekne logoped.</p>`;
+  <p class="prose" style="margin-top:14px;font-size:14px;color:var(--muted)">Tapnutím na kteroukoliv úroveň se vám zobrazí info, co je jejím obsahem. Spustíte ji tlačítkem "Začít lekci" v horní části aplikace.</p>`;
 }
 
 function viewStars(){
